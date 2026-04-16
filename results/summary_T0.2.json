@@ -1,0 +1,15 @@
+{
+  "label": "T0.2",
+  "n_generated": 1000,
+  "n_valid": 287,
+  "validity_%": "28.7",
+  "uniqueness_%": "87.1",
+  "novelty_%": "99.2",
+  "drug_like_%": "99.2",
+  "pains_clean_%": "93.6",
+  "avg_QED": 0.5474,
+  "avg_toxicity": 0.1117,
+  "avg_final_score": 0.6565,
+  "internal_diversity": 0.8672,
+  "scaffold_diversity": 0.7073
+}

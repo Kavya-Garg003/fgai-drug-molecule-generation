@@ -1,15 +1,15 @@
 {
   "label": "T0.7",
-  "n_generated": 200,
-  "n_valid": 68,
-  "validity_%": "34.0",
+  "n_generated": 1000,
+  "n_valid": 382,
+  "validity_%": "38.2",
   "uniqueness_%": "100.0",
-  "novelty_%": "100.0",
-  "drug_like_%": "98.5",
-  "pains_clean_%": "97.1",
-  "avg_QED": 0.4156,
-  "avg_toxicity": 0.1204,
-  "avg_final_score": 0.5782,
-  "internal_diversity": 0.9177,
-  "scaffold_diversity": 0.8971
+  "novelty_%": "97.9",
+  "drug_like_%": "99.5",
+  "pains_clean_%": "96.3",
+  "avg_QED": 0.5512,
+  "avg_toxicity": 0.1018,
+  "avg_final_score": 0.6669,
+  "internal_diversity": 0.9088,
+  "scaffold_diversity": 0.8717
 }
