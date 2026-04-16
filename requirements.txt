@@ -1,0 +1,10 @@
+selfies>=2.1.1
+rdkit
+torch>=2.0.0
+pandas
+numpy
+matplotlib
+seaborn
+scikit-learn
+tqdm
+PyPDF2
