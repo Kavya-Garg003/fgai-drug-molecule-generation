@@ -38,7 +38,7 @@ def main():
         CFG.TEMPERATURES  = [0.5, 0.7]
         print("[Main] QUICK MODE: reduced dataset + epochs for testing.")
 
-    # ── 1. Load & preprocess data ─────────────────────────────────────────
+    # -- 1. Load & preprocess data ----------------------------------------─
     print("\n" + "="*60)
     print("STAGE 1: Data Loading & SELFIES Preprocessing")
     print("="*60)
@@ -49,7 +49,7 @@ def main():
     idx2token = data["idx2token"]
     pad_idx   = data["pad_idx"]
 
-    # ── 2. Build / train model ────────────────────────────────────────────
+    # -- 2. Build / train model --------------------------------------------
     print("\n" + "="*60)
     print("STAGE 2: Model Training")
     print("="*60)
@@ -70,7 +70,7 @@ def main():
         model   = load_model(len(vocab), weights_path)
         history_csv = os.path.join(CFG.RESULTS_DIR, "training_history.csv")
 
-    # ── 3. Generate molecules at each temperature ─────────────────────────
+    # -- 3. Generate molecules at each temperature ------------------------─
     print("\n" + "="*60)
     print("STAGE 3: Molecule Generation (Temperature Sweep)")
     print("="*60)
@@ -82,7 +82,7 @@ def main():
         n_per_temp   = CFG.N_GENERATE,
     )
 
-    # ── 4. Random baseline ────────────────────────────────────────────────
+    # -- 4. Random baseline ------------------------------------------------
     print("\n" + "="*60)
     print("STAGE 4: Random Baseline Generation")
     print("="*60)
@@ -91,7 +91,7 @@ def main():
     with open(baseline_path, "w") as f:
         f.write("\n".join(baseline_smiles))
 
-    # ── 5. Evaluate ───────────────────────────────────────────────────────
+    # -- 5. Evaluate ------------------------------------------------------─
     print("\n" + "="*60)
     print("STAGE 5: Evaluation")
     print("="*60)
@@ -131,10 +131,10 @@ def main():
     benchmark_df = build_benchmark_table(all_results + [base_res])
     bench_path   = os.path.join(CFG.RESULTS_DIR, "benchmark_table.csv")
     benchmark_df.to_csv(bench_path)
-    print(f"\n[Main] Benchmark table saved → {bench_path}")
+    print(f"\n[Main] Benchmark table saved -> {bench_path}")
     print(benchmark_df.to_string())
 
-    # ── 6. All figures ────────────────────────────────────────────────────
+    # -- 6. All figures ----------------------------------------------------
     print("\n" + "="*60)
     print("STAGE 6: Figure Generation")
     print("="*60)
@@ -149,7 +149,7 @@ def main():
         train_smiles       = data["train_smiles"],
     )
 
-    # ── 7. Final summary ──────────────────────────────────────────────────
+    # -- 7. Final summary --------------------------------------------------
     print("\n" + "="*60)
     print("PIPELINE COMPLETE ✓")
     print("="*60)
@@ -162,7 +162,7 @@ def main():
 
     # Print top-5 molecules
     if len(best_df) > 0:
-        print("\n  🏆 Top 5 Generated Molecules:")
+        print("\n  [Top] Top 5 Generated Molecules:")
         cols = ["SMILES", "MolWeight", "QED", "DrugScore", "Toxicity", "FinalScore"]
         print(best_df[cols].head(5).to_string(index=False))
 

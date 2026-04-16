@@ -1,8 +1,8 @@
 """
-data_loader.py — Load ZINC250K, convert SMILES → SELFIES, build vocabulary.
+data_loader.py — Load ZINC250K, convert SMILES -> SELFIES, build vocabulary.
 
 KEY FIX vs original notebook:
-  - Uses SELFIES encoding → ANY token sequence decodes to a valid molecule
+  - Uses SELFIES encoding -> ANY token sequence decodes to a valid molecule
     (solves the 7.3% validity problem at its root)
   - Proper train/test split stored for novelty evaluation later
 """
@@ -11,18 +11,23 @@ import os, random, pickle
 import numpy as np
 import pandas as pd
 import selfies as sf
+from rdkit import Chem
 from tqdm import tqdm
 from config import CFG
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 # Helpers
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 
 def smiles_to_selfies(smiles: str) -> str | None:
     """Convert a SMILES string to SELFIES; return None if conversion fails."""
     try:
-        return sf.encoder(smiles)
+        mol = Chem.MolFromSmiles(smiles)
+        if mol:
+            clean_smi = Chem.MolToSmiles(mol)
+            return sf.encoder(clean_smi)
+        return None
     except Exception:
         return None
 
@@ -39,9 +44,9 @@ def pad_tokens(tokens: list[str], max_len: int, pad: str) -> list[str]:
     return tokens
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 # Main loader
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 
 def load_and_prepare(
     data_path: str  = CFG.DATA_PATH,
@@ -53,7 +58,7 @@ def load_and_prepare(
 ) -> dict:
     """
     Full data pipeline:
-      SMILES → SELFIES → tokenise → pad → integer-encode → train/test split.
+      SMILES -> SELFIES -> tokenise -> pad -> integer-encode -> train/test split.
 
     Returns a dict with keys:
       X_train, X_test  (np arrays, shape [N, max_len-1])
@@ -64,11 +69,11 @@ def load_and_prepare(
     cache_file = os.path.join(cache_dir, "data_cache.pkl")
 
     if os.path.exists(cache_file):
-        print("[DataLoader] Loading from cache …")
+        print("[DataLoader] Loading from cache ...")
         with open(cache_file, "rb") as f:
             return pickle.load(f)
 
-    print("[DataLoader] Reading CSV …")
+    print("[DataLoader] Reading CSV ...")
     df = pd.read_csv(data_path)
     smiles_col = CFG.SMILES_COL
     df = df[[smiles_col]].dropna()
@@ -79,8 +84,8 @@ def load_and_prepare(
     smiles_list = df[smiles_col].tolist()
     print(f"[DataLoader] {len(smiles_list):,} SMILES loaded.")
 
-    # ── Convert to SELFIES ────────────────────────────────────────────────
-    print("[DataLoader] Converting SMILES → SELFIES …")
+    # -- Convert to SELFIES ------------------------------------------------
+    print("[DataLoader] Converting SMILES -> SELFIES ...")
     selfies_list, valid_smiles = [], []
     for smi in tqdm(smiles_list):
         sel = smiles_to_selfies(smi)
@@ -90,7 +95,7 @@ def load_and_prepare(
 
     print(f"[DataLoader] {len(selfies_list):,} valid SELFIES obtained.")
 
-    # ── Build vocabulary ──────────────────────────────────────────────────
+    # -- Build vocabulary --------------------------------------------------
     all_tokens: set[str] = set()
     for sel in selfies_list:
         all_tokens.update(tokenise_selfies(sel))
@@ -100,8 +105,8 @@ def load_and_prepare(
     pad_idx = token2idx[CFG.PAD_TOKEN]
     print(f"[DataLoader] Vocabulary size: {len(vocab)}")
 
-    # ── Encode sequences ──────────────────────────────────────────────────
-    print("[DataLoader] Encoding sequences …")
+    # -- Encode sequences --------------------------------------------------
+    print("[DataLoader] Encoding sequences ...")
     X_list, y_list = [], []
     for sel in tqdm(selfies_list):
         tokens = tokenise_selfies(sel)
@@ -113,7 +118,7 @@ def load_and_prepare(
     X = np.array(X_list, dtype=np.int32)
     y = np.array(y_list, dtype=np.int32)
 
-    # ── Train / test split ────────────────────────────────────────────────
+    # -- Train / test split ------------------------------------------------
     np.random.seed(seed)
     idx       = np.random.permutation(len(X))
     n_train   = int(len(X) * train_split)

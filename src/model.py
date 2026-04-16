@@ -19,7 +19,7 @@ class SELFIESLSTMModel(nn.Module):
     Character-level LSTM for SELFIES token generation.
 
     Architecture:
-      Embedding → LSTM-1 → Dropout → LSTM-2 → Dropout → Linear (logits)
+      Embedding -> LSTM-1 -> Dropout -> LSTM-2 -> Dropout -> Linear (logits)
     """
 
     def __init__(self, vocab_size: int):
@@ -61,7 +61,7 @@ def build_model(vocab_size: int) -> SELFIESLSTMModel:
 
 def save_model(model: SELFIESLSTMModel, path: str):
     torch.save(model.state_dict(), path)
-    print(f"[Model] Saved → {path}")
+    print(f"[Model] Saved -> {path}")
 
 
 def load_model(vocab_size: int, path: str) -> SELFIESLSTMModel:

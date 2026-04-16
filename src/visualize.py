@@ -30,7 +30,7 @@ from rdkit.Chem import AllChem, DataStructs
 
 from config import CFG
 
-# ── Global style ──────────────────────────────────────────────────────────────
+# -- Global style --------------------------------------------------------------
 sns.set_theme(style="whitegrid", palette="muted", font_scale=1.1)
 PALETTE = ["#4C72B0", "#DD8452", "#55A868", "#C44E52",
            "#8172B2", "#937860", "#DA8BC3", "#8C8C8C"]
@@ -41,12 +41,12 @@ def _save(fig, name: str):
     path = os.path.join(CFG.FIGURES_DIR, name)
     fig.savefig(path, dpi=DPI, bbox_inches="tight")
     plt.close(fig)
-    print(f"  [Fig] Saved → {path}")
+    print(f"  [Fig] Saved -> {path}")
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 # 01 Training loss curve
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 
 def plot_training_history(history_csv: str):
     df  = pd.read_csv(history_csv)
@@ -81,9 +81,9 @@ def plot_training_history(history_csv: str):
     _save(fig, "01_training_loss_curve.png")
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 # 02 Model vs. baseline bar chart
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 
 def plot_model_vs_baseline(model_summary: dict, baseline_summary: dict):
     metrics = ["validity_%", "uniqueness_%", "novelty_%",
@@ -115,9 +115,9 @@ def plot_model_vs_baseline(model_summary: dict, baseline_summary: dict):
     _save(fig, "02_metrics_comparison.png")
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 # 03 Temperature sweep (ablation)
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 
 def plot_temperature_sweep(summaries: list[dict]):
     """
@@ -158,9 +158,9 @@ def plot_temperature_sweep(summaries: list[dict]):
     _save(fig, "03_temperature_sweep.png")
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 # 04 Property distributions
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 
 def plot_property_distributions(df: pd.DataFrame):
     props   = ["MolWeight", "LogP", "TPSA", "HBD", "HBA", "QED"]
@@ -203,9 +203,9 @@ def plot_property_distributions(df: pd.DataFrame):
     _save(fig, "04_property_distributions.png")
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 # 05 Toxicity breakdown
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 
 def plot_toxicity_breakdown(df: pd.DataFrame):
     fig, axes = plt.subplots(1, 2, figsize=(12, 5))
@@ -240,9 +240,9 @@ def plot_toxicity_breakdown(df: pd.DataFrame):
     _save(fig, "05_toxicity_breakdown.png")
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 # 06 Top-12 molecule grid
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 
 def plot_top_molecules(df: pd.DataFrame, n: int = 12):
     top = df.head(n)
@@ -263,12 +263,12 @@ def plot_top_molecules(df: pd.DataFrame, n: int = 12):
     )
     path = os.path.join(CFG.FIGURES_DIR, "06_top12_molecules.png")
     img.save(path)
-    print(f"  [Fig] Saved → {path}")
+    print(f"  [Fig] Saved -> {path}")
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 # 07 Radar chart — top 5
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 
 def plot_radar(df: pd.DataFrame, n: int = 5):
     top = df.head(n)
@@ -287,7 +287,7 @@ def plot_radar(df: pd.DataFrame, n: int = 5):
     for i, (_, row) in enumerate(top.iterrows()):
         vals = _norm(row) + [_norm(row)[0]]
         ax.plot(ang, vals, linewidth=2, color=PALETTE[i],
-                label=f"{row['SMILES'][:18]}… (Score={row['FinalScore']:.2f})")
+                label=f"{row['SMILES'][:18]}... (Score={row['FinalScore']:.2f})")
         ax.fill(ang, vals, alpha=0.10, color=PALETTE[i])
 
     ax.set_thetagrids(np.degrees(ang[:-1]), cats)
@@ -299,9 +299,9 @@ def plot_radar(df: pd.DataFrame, n: int = 5):
     _save(fig, "07_radar_top5.png")
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 # 08 Correlation heatmap
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 
 def plot_correlation_heatmap(df: pd.DataFrame):
     cols = ["MolWeight", "LogP", "TPSA", "HBD", "HBA",
@@ -327,13 +327,13 @@ def plot_correlation_heatmap(df: pd.DataFrame):
     _save(fig, "08_correlation_heatmap.png")
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 # 09 Tanimoto novelty distribution
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 
 def plot_novelty_tanimoto(gen_smiles: list[str], train_smiles: list[str], n_train: int = 2000):
     from rdkit.Chem import AllChem, DataStructs
-    print("[Fig09] Computing Tanimoto novelty histogram …")
+    print("[Fig09] Computing Tanimoto novelty histogram ...")
     train_mols = [Chem.MolFromSmiles(s) for s in train_smiles[:n_train] if Chem.MolFromSmiles(s)]
     train_fps  = [AllChem.GetMorganFingerprintAsBitVect(m, 2, 2048) for m in train_mols]
 
@@ -370,9 +370,9 @@ def plot_novelty_tanimoto(gen_smiles: list[str], train_smiles: list[str], n_trai
     _save(fig, "09_novelty_tanimoto_hist.png")
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 # Convenience: generate all figures
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 
 def generate_all_figures(
     history_csv: str,
@@ -383,7 +383,7 @@ def generate_all_figures(
     baseline_summary: dict,
     train_smiles: list[str],
 ):
-    print("\n[Visualizer] Generating all figures …")
+    print("\n[Visualizer] Generating all figures ...")
 
     plot_training_history(history_csv)
     plot_model_vs_baseline(model_summary, baseline_summary)
@@ -395,4 +395,4 @@ def generate_all_figures(
     plot_correlation_heatmap(df_model)
     plot_novelty_tanimoto(df_model["SMILES"].tolist(), train_smiles)
 
-    print(f"\n[Visualizer] All figures saved to → {CFG.FIGURES_DIR}")
+    print(f"\n[Visualizer] All figures saved to -> {CFG.FIGURES_DIR}")

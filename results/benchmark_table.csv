@@ -1,0 +1,4 @@
+label,n_generated,n_valid,validity_%,uniqueness_%,novelty_%,drug_like_%,pains_clean_%,avg_QED,avg_toxicity,avg_final_score,internal_diversity,scaffold_diversity
+T0.5,200,50,25.0,100.0,100.0,98.0,98.0,0.4886,0.1232,0.6087,0.904,0.92
+T0.7,200,68,34.0,100.0,100.0,98.5,97.1,0.4156,0.1204,0.5782,0.9177,0.8971
+baseline,200,199,99.5,99.5,0.0,100.0,98.0,0.7321,0.0347,0.8307,0.8784,0.9749

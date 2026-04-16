@@ -28,7 +28,7 @@ def train(data: dict | None = None) -> dict:
 
     print(f"[Trainer] Samples: {len(X):,}  |  Vocab: {len(vocab)}")
 
-    # ── Dataset & loaders ─────────────────────────────────────────────────
+    # -- Dataset & loaders ------------------------------------------------─
     dataset   = TensorDataset(X, y)
     n_val     = int(len(dataset) * 0.10)
     n_train   = len(dataset) - n_val
@@ -39,7 +39,7 @@ def train(data: dict | None = None) -> dict:
     train_loader = DataLoader(train_ds, batch_size=CFG.BATCH_SIZE, shuffle=True)
     val_loader   = DataLoader(val_ds,   batch_size=CFG.BATCH_SIZE, shuffle=False)
 
-    # ── Model ─────────────────────────────────────────────────────────────
+    # -- Model ------------------------------------------------------------─
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"[Trainer] Device: {device}")
     model  = build_model(len(vocab)).to(device)
@@ -55,9 +55,9 @@ def train(data: dict | None = None) -> dict:
     weights_path  = os.path.join(CFG.MODEL_DIR, "selfies_lstm_best.pt")
     history       = {"loss": [], "val_loss": [], "accuracy": [], "val_accuracy": []}
 
-    print(f"[Trainer] Training for up to {CFG.EPOCHS} epochs …")
+    print(f"[Trainer] Training for up to {CFG.EPOCHS} epochs ...")
     for epoch in range(1, CFG.EPOCHS + 1):
-        # ── Train ─────────────────────────────────────────────────────────
+        # -- Train --------------------------------------------------------─
         model.train()
         total_loss, total_correct, total_tokens = 0.0, 0, 0
         for xb, yb in train_loader:
@@ -78,7 +78,7 @@ def train(data: dict | None = None) -> dict:
         train_loss = total_loss / len(train_loader.dataset)
         train_acc  = total_correct / max(total_tokens, 1)
 
-        # ── Validate ──────────────────────────────────────────────────────
+        # -- Validate ------------------------------------------------------
         model.eval()
         v_loss, v_correct, v_tokens = 0.0, 0, 0
         with torch.no_grad():
@@ -119,17 +119,17 @@ def train(data: dict | None = None) -> dict:
                 print(f"[Trainer] Early stopping at epoch {epoch}.")
                 break
 
-    # ── Save history ──────────────────────────────────────────────────────
+    # -- Save history ------------------------------------------------------
     hist_df   = pd.DataFrame(history)
     hist_path = os.path.join(CFG.RESULTS_DIR, "training_history.csv")
     hist_df.to_csv(hist_path, index=False)
-    print(f"[Trainer] History → {hist_path}")
+    print(f"[Trainer] History -> {hist_path}")
 
     # Save vocab reference
     vocab_path = os.path.join(CFG.MODEL_DIR, "vocab.json")
     with open(vocab_path, "w") as f:
         json.dump({"vocab": data["vocab"], "max_len": data["max_len"]}, f)
-    print(f"[Trainer] Vocab  → {vocab_path}")
+    print(f"[Trainer] Vocab  -> {vocab_path}")
 
     return history
 

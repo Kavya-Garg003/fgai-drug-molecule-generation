@@ -1,8 +1,8 @@
 """
-generate.py — Generate novel SELFIES → SMILES with temperature sweep (PyTorch).
+generate.py — Generate novel SELFIES -> SMILES with temperature sweep (PyTorch).
 
 Improvements vs original notebook:
-  - SELFIES decoding → ~100% syntactically valid output
+  - SELFIES decoding -> ~100% syntactically valid output
   - No artificial stop conditions that broke ring closures
   - Temperature sweep (generates at multiple temps for ablation study)
   - Nucleus (top-p) sampling option alongside temperature sampling
@@ -19,9 +19,9 @@ from config import CFG
 from model import load_model
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 # Sampling
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 
 def _sample_token(logits: np.ndarray, temperature: float, top_p: float = 1.0) -> int:
     """
@@ -33,7 +33,7 @@ def _sample_token(logits: np.ndarray, temperature: float, top_p: float = 1.0) ->
         top_p       : nucleus sampling — keep only top-p probability mass
     """
     logits = logits.astype(np.float64)
-    logits = np.log(logits + 1e-10) / max(temperature, 1e-5)
+    logits = logits / max(temperature, 1e-5)
     probs  = np.exp(logits - np.max(logits))
     probs /= probs.sum()
 
@@ -50,9 +50,9 @@ def _sample_token(logits: np.ndarray, temperature: float, top_p: float = 1.0) ->
     return int(np.random.choice(len(probs), p=probs))
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 # SELFIES generation
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 
 def generate_selfies(
     model,
@@ -105,7 +105,7 @@ def generate_selfies(
 
 def selfies_to_smiles_list(selfies_list: list[str]) -> list[str]:
     """
-    Decode SELFIES → SMILES and verify via RDKit.
+    Decode SELFIES -> SMILES and verify via RDKit.
     With SELFIES, virtually all strings decode successfully (validity fix).
     """
     smiles_out = []
@@ -120,9 +120,9 @@ def selfies_to_smiles_list(selfies_list: list[str]) -> list[str]:
     return smiles_out
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 # Temperature sweep (for ablation / paper Table)
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 
 def generate_sweep(
     model,
@@ -134,7 +134,7 @@ def generate_sweep(
 ) -> dict[float, list[str]]:
     """
     Generate SMILES at each temperature in `temperatures`.
-    Returns dict: temp → list of canonical SMILES.
+    Returns dict: temp -> list of canonical SMILES.
     """
     results = {}
     for temp in temperatures:
@@ -145,7 +145,7 @@ def generate_sweep(
         )
         smiles = selfies_to_smiles_list(sels)
         results[temp] = smiles
-        print(f"  T={temp}: {len(sels)} SELFIES → {len(smiles)} SMILES decoded")
+        print(f"  T={temp}: {len(sels)} SELFIES -> {len(smiles)} SMILES decoded")
 
         out = os.path.join(CFG.RESULTS_DIR, f"generated_T{temp}.txt")
         with open(out, "w") as f:
@@ -153,9 +153,9 @@ def generate_sweep(
     return results
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 # Random baseline generator (for comparison)
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 
 def random_baseline(
     train_smiles: list[str],

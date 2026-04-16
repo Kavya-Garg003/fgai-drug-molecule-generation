@@ -33,9 +33,9 @@ from config import CFG
 warnings.filterwarnings("ignore")
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 # ADMET / Toxicity — REPLACES the naive len(smiles)/50 proxy
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 
 # Build PAINS filter catalog once
 _PAINS_PARAMS = FilterCatalog.FilterCatalogParams()
@@ -55,9 +55,9 @@ def admet_toxicity(mol) -> float:
         1.0 = poor ADMET profile (high toxicity)
 
     Components:
-      - TPSA penalty  : TPSA > 140 Å² → poor oral absorption (Veber rule)
-      - logP penalty  : logP > 5      → poor solubility
-      - MW penalty    : MW > 500      → poor absorption (Lipinski)
+      - TPSA penalty  : TPSA > 140 Å² -> poor oral absorption (Veber rule)
+      - logP penalty  : logP > 5      -> poor solubility
+      - MW penalty    : MW > 500      -> poor absorption (Lipinski)
       - PAINS penalty : Pan-Assay Interference — known false-positive alerts
       - Brenk penalty : Structural alerts for toxic motifs
     """
@@ -82,9 +82,9 @@ def admet_toxicity(mol) -> float:
     return round(float(score), 4)
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 # Drug-likeness
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 
 def lipinski_score(mol) -> float:
     """
@@ -100,14 +100,14 @@ def lipinski_score(mol) -> float:
     )
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 # Filters
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 
 def passes_basic_filters(mol) -> bool:
     """
     Hard filters applied BEFORE scoring.
-    FIX: minimum MW enforced → trivial molecules (isobutane etc.) excluded.
+    FIX: minimum MW enforced -> trivial molecules (isobutane etc.) excluded.
     """
     mw          = Descriptors.MolWt(mol)
     heavy_atoms = mol.GetNumHeavyAtoms()
@@ -128,9 +128,9 @@ def passes_basic_filters(mol) -> bool:
     )
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 # Tanimoto diversity
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 
 def morgan_fp(mol, radius: int = 2, n_bits: int = 2048):
     return AllChem.GetMorganFingerprintAsBitVect(mol, radius, nBits=n_bits)
@@ -178,9 +178,9 @@ def scaffold_diversity(mols: list) -> float:
     return round(len(scaffolds) / len(mols), 4) if mols else 0.0
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 # Full evaluation pipeline
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 
 def evaluate(
     smiles_list: list[str],
@@ -200,10 +200,10 @@ def evaluate(
     Returns:
         summary dict with all metrics
     """
-    print(f"\n[Evaluator] Evaluating {len(smiles_list):,} candidates (label={label}) …")
+    print(f"\n[Evaluator] Evaluating {len(smiles_list):,} candidates (label={label}) ...")
 
-    # ── Pre-compute training fingerprints (sample 5K for speed) ──────────
-    print("[Evaluator] Building training fingerprints …")
+    # -- Pre-compute training fingerprints (sample 5K for speed) ----------
+    print("[Evaluator] Building training fingerprints ...")
     train_sample = train_smiles[:5_000]
     train_fps = []
     for smi in tqdm(train_sample, desc="train fps"):
@@ -211,7 +211,7 @@ def evaluate(
         if mol:
             train_fps.append(morgan_fp(mol))
 
-    # ── Parse + filter ────────────────────────────────────────────────────
+    # -- Parse + filter ----------------------------------------------------
     rows = []
     valid_mols = []
 
@@ -262,7 +262,7 @@ def evaluate(
         "FinalScore", ascending=False
     ).reset_index(drop=True)
 
-    # ── Summary metrics ───────────────────────────────────────────────────
+    # -- Summary metrics --------------------------------------------------─
     n_gen      = len(smiles_list)
     n_valid    = len(rows)             # after RDKit parse (invalids dropped)
     n_filtered = len(df)              # after uniqueness + filter
@@ -293,15 +293,15 @@ def evaluate(
         "scaffold_diversity": scaf_div,
     }
 
-    print("\n── Evaluation Summary ──────────────────────────────")
+    print("\n-- Evaluation Summary ------------------------------")
     for k, v in summary.items():
         print(f"   {k:<25}: {v}")
-    print("────────────────────────────────────────────────────")
+    print("----------------------------------------------------")
 
     if save_csv and len(df) > 0:
         out_path = os.path.join(CFG.RESULTS_DIR, f"molecules_{label}.csv")
         df.to_csv(out_path, index=False)
-        print(f"[Evaluator] Per-molecule results → {out_path}")
+        print(f"[Evaluator] Per-molecule results -> {out_path}")
 
     # Save summary
     summ_path = os.path.join(CFG.RESULTS_DIR, f"summary_{label}.json")
@@ -311,9 +311,9 @@ def evaluate(
     return {"summary": summary, "df": df}
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 # MOSES-style benchmark table
-# ─────────────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------------─
 
 def build_benchmark_table(results: list[dict]) -> pd.DataFrame:
     """
