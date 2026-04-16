@@ -148,25 +148,25 @@ Final Score: 0.88
 ![Metrics Dashboard](legacy_results/figures/metrics_dashboard.png)
 
 #### Top 12 Generated Molecules with Scores
-![Top 12 Molecules](top12_molecules.png)
+![Top 12 Molecules](legacy_results/figures/top12_molecules.png)
 
 #### Radar Chart — Top 5 Molecules
-![Radar Chart](radar_top5.png)
+![Radar Chart](legacy_results/figures/radar_top5.png)
 
 #### Property Distributions
-![Property Distributions](property_distributions.png)
+![Property Distributions](legacy_results/figures/property_distributions.png)
 
 #### Drug Score vs Toxicity
-![Drug vs Toxicity](drug_vs_toxicity.png)
+![Drug vs Toxicity](legacy_results/figures/drug_vs_toxicity.png)
 
 #### Lipinski Compliance
-![Lipinski Compliance](lipinski_compliance.png)
+![Lipinski Compliance](legacy_results/figures/lipinski_compliance.png)
 
 #### Property Correlation Heatmap
-![Property Correlation](property_correlation.png)
+![Property Correlation](legacy_results/figures/property_correlation.png)
 
 #### QED Distribution
-![QED Distribution](qed_distribution.png)
+![QED Distribution](legacy_results/figures/qed_distribution.png)
 
 ---
 
