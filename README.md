@@ -95,20 +95,34 @@ Molecules are graded iteratively based on Lipinski’s Rule of Five and composit
 ### Key Evaluation Metrics *(Sample T=0.5 config)*
 | Metric                 | Value    |
 |:----------------------:|:--------:|
-| Uniqueness             | 100%     |
-| Novelty                | 100%     |
-| Drug-Likeness          | ~98%     |
-| PAINS Clean (Tox Free) | ~98%     |
-| Internal Diversity     | 0.904    |
-| Scaffold Diversity     | 0.92     |
+| Uniqueness             | 98.4%    |
+| Novelty                | 98.7%    |
+| Drug-Likeness          | 99.7%    |
+| PAINS Clean (Tox Free) | 96.3%    |
+| Avg QED                | 0.558    |
+| Internal Diversity     | 0.895    |
+| Scaffold Diversity     | 0.819    |
 
 ### Performance Visualizations
 Over nine highly polished publication-ready charts are output per run inside the `figures/` directory.
 
-- **`01_training_loss_curve.png`** - Epoch loss tracking  
-- **`03_temperature_sweep.png`** - Ablation evaluations across varying temperature outputs  
-- **`07_radar_top5.png`** - Distribution properties of best output compounds  
-- **`09_novelty_tanimoto_hist.png`** - Tanimoto distribution vs Training dataset
+#### Training Convergence
+![Training Loss Curve](figures/01_training_loss_curve.png)
+
+#### Temperature Ablation Sweep
+![Temperature Sweep](figures/03_temperature_sweep.png)
+
+#### Property Distributions
+![Property Distributions](figures/04_property_distributions.png)
+
+#### Toxicity & Safety Breakdown
+![Toxicity Breakdown](figures/05_toxicity_breakdown.png)
+
+#### Top 5 Molecules Radar Analysis
+![Radar Top 5](figures/07_radar_top5.png)
+
+#### Tanimoto Novelty vs Training
+![Tanimoto Novelty](figures/09_novelty_tanimoto_hist.png)
 
 ---
 
