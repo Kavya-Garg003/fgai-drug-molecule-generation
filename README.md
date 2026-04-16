@@ -174,8 +174,6 @@ Final Score: 0.88
 
 ```
 ├── FGAI_Project.ipynb                  # Main Jupyter Notebook (full pipeline)
-├── FGAI PAPER (1).pdf                  # Research paper
-├── FGAI Project.ipynb - Colab.pdf      # Colab notebook PDF export
 ├── 250k_rndm_zinc_drugs_clean_3.csv    # Training dataset (ZINC250K)
 ├── molecule_model.h5                   # Trained LSTM model (Keras/HDF5)
 ├── generated_molecules_full.csv        # Generated molecules with properties
