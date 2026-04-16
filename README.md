@@ -145,7 +145,7 @@ Final Score: 0.88
 ### Visualization Results
 
 #### Metrics Dashboard
-![Metrics Dashboard](metrics_dashboard.png)
+![Metrics Dashboard](legacy_results/figures/metrics_dashboard.png)
 
 #### Top 12 Generated Molecules with Scores
 ![Top 12 Molecules](top12_molecules.png)
