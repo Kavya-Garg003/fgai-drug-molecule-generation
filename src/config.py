@@ -6,8 +6,9 @@ import os
 
 class CFG:
     # ── Paths ──────────────────────────────────────────────────────────────
-    BASE_DIR       = os.path.dirname(os.path.abspath(__file__))
-    DATA_PATH      = os.path.join(BASE_DIR, "250k_rndm_zinc_drugs_clean_3.csv")
+    # src/config.py lives in src/, so go up one level for project root
+    BASE_DIR       = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    DATA_PATH      = os.path.join(BASE_DIR, "data",    "250k_rndm_zinc_drugs_clean_3.csv")
     RESULTS_DIR    = os.path.join(BASE_DIR, "results")
     MODEL_DIR      = os.path.join(BASE_DIR, "models")
     FIGURES_DIR    = os.path.join(BASE_DIR, "figures")
